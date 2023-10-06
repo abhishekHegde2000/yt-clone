@@ -1,0 +1,276 @@
+Youtube - Clone 
+
+ 
+
+Steps - - 
+
+Npx create-react-app youtube-clone 
+
+ 
+
+npm install -D tailwindcss 
+
+npx tailwindcss init  
+
+ 
+
+Configure path – config tailwind 
+
+------------------------------------------------------------------ 
+
+/** @type {import('tailwindcss').Config} */ 
+
+module.exports = { 
+
+  content: ["./src/**/*.{html,js}"], 
+
+  theme: { 
+
+    extend: {}, 
+
+  }, 
+
+  plugins: [], 
+
+} 
+
+--------------------------------------------------------------- 
+
+Index.file -  
+
+@tailwind base; 
+
+@tailwind components; 
+
+@tailwind utilities; 
+
+ 
+
+ 
+
+<React.StrictMode> is a development mode feature in React that helps with identifying potential problems in the application. It activates additional checks and warnings for its descendants. It is not a component that renders anything, but rather a tool that highlights potential issues in the code. It is recommended to use it during development and testing, but not in production. 
+
+ 
+
+ 
+
+Machine coding interview – requirements clarification .  
+
+We have to ask interviewr about the features we need to build. 
+
+Ask about tech stack – what are techs we will use – like tailwind or css. Redux or use State? 
+
+Next 5 mins in planning things – low level design . Discuss your approach.  
+
+ 
+
+ 
+
+ 
+
+ 
+
+After this you have to say which cmd u would use , I use npx create-react-app. 
+
+ 
+
+reportWebVitals is a function that is used to report performance metrics of a web page to a third-party service or to the developer's own analytics system. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+Now I want to write a functionality where if I click on menu bar button the side bar should toggle. 
+
+How to build this?? 
+ 
+
+Using use state??  
+
+And example -  
+
+import React, { useState } from 'react'; 
+
+const App = () => { 
+
+  const [sidebarVisible, setSidebarVisible] = useState(false); 
+
+  const toggleSidebar = () => { 
+
+    setSidebarVisible(!sidebarVisible); 
+
+  }; 
+
+  return ( 
+
+    <div className="flex"> 
+
+      <div className={`sidebar ${sidebarVisible ? 'visible' : 'hidden'}`}> 
+
+        {/* Sidebar content */} 
+
+      </div> 
+
+      <div className="content"> 
+
+        <button onClick={toggleSidebar}>Toggle Sidebar</button> 
+
+        {/* Main content */} 
+
+      </div> 
+
+    </div> 
+
+  ); 
+
+}; 
+
+export default App; 
+
+But we wont use this because we need to think big and we r building utube with many functionalities.  
+
+So we can build a it using redux store. 
+
+Npm Install @reduxjs/toolkit      and npm I react-redux                                                                                                                                                     
+
+Using Redux : 
+
+First thing I have to do is --- > create redux Store – it’s a central repository system where can store the data . And inside the store there will be many slices of perticular data. 
+
+Create redux store 
+
+Create this in utils .  
+
+It will be created with configureStore. 
+
+import { configureStore } from "@reduxjs/toolkit"; 
+
+ 
+
+const store = configureStore({ 
+
+ 
+
+}); 
+
+export default store; 
+
+ 
+
+Create Slice 
+
+Create a slice with api – createSlice :  
+
+This takes in parameter name , initialstate , reducers 
+
+Inside reducers – there are states and actions through which we can manipulate data. 
+
+import { createSlice } from "@reduxjs/toolkit"; 
+
+ 
+
+const appSlice = createSlice({ 
+
+  name: "app", 
+
+  initialState: { 
+
+    isMenuOpen: true, 
+
+  }, 
+
+  reducers: { 
+
+    toggleMenu: (state) => { 
+
+      state.isMenuOpen = !state.isMenuOpen; 
+
+    }, 
+
+    closeMenu: (state) => { 
+
+      state.isMenuOpen = false; 
+
+    }, 
+
+  }, 
+
+}); 
+
+ 
+
+export const { toggleMenu, closeMenu } = appSlice.actions; 
+
+export default appSlice.reducer; 
+
+ 
+
+ 
+
+Once I created the slice import in into store. 
+
+ 
+
+import { configureStore } from "@reduxjs/toolkit"; 
+
+import appSlice from "./appSlice"; 
+
+const store = configureStore({ 
+
+  reducer: { 
+
+    app: appSlice, 
+
+  }, 
+
+}); 
+
+export default store; 
+
+ 
+
+    3) Give Provider to app.js 
+
+Once you do this , we need to go back into the app.js and we need to provide our store to it. 
+
+To do that wrap the main div with <provider store  = {appStore}> 
+
+Need to import appStore from utils. 
+
+function App() { 
+
+  return ( 
+
+    <Provider store={store}> 
+
+      <div> 
+
+        <Head/> 
+
+        <Body/> 
+
+      </div> 
+
+    </Provider> 
+
+  ); 
+
+} 
+
+export default App; 
+
+ 
+
+ 
+
+Once we are done with these steps we can check in the redux extension , if the states are visible or not (initial state set to true) 
+
+If it it these then uits working fine. 
+
+---------------------------------------------------------------- Commit 1 -------------------------------------------------------------------------- 
+
+ 
